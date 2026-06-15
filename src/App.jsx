@@ -47,6 +47,8 @@ import Entreprise from "./pages/bonus/Entreprise"
 import Regles from "./pages/bonus/Regles"
 import Activite from "./pages/bonus/Activite"
 
+import LogoPreview from "./pages/LogoPreview"
+
 const App = () => {
   // ===== PING ANTI-VEILLE RENDER (toutes les 14 min) =====
   useEffect(() => {
@@ -118,7 +120,7 @@ const App = () => {
           <Route path="/entreprise" element={<ProtectedRoute><Entreprise /></ProtectedRoute>} />
           <Route path="/regles" element={<ProtectedRoute><Regles /></ProtectedRoute>} />
           <Route path="/activite" element={<ProtectedRoute><Activite /></ProtectedRoute>} />
-
+          <Route path="/logos" element={<LogoPreview />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
