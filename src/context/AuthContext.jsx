@@ -3,6 +3,35 @@ import api from '../services/api'
 
 const AuthContext = createContext()
 
+// ===== HELPER : transformer une erreur axios en message clair =====
+const getErrorMessage = (error, defaultMsg = "Erreur") => {
+  // Si le backend renvoie un message
+  if (error.response?.data?.message) {
+    return error.response.data.message
+  }
+
+  // Timeout
+  if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
+    return "⏳ Le serveur se réveille... Patientez 30 secondes et réessayez."
+  }
+
+  // Pas de connexion / serveur down
+  if (
+    error.code === "ERR_NETWORK" ||
+    error.message?.includes("Network Error") ||
+    error.message?.includes("Failed to fetch")
+  ) {
+    return "🌐 Connexion impossible. Vérifiez votre internet ou réessayez dans quelques instants."
+  }
+
+  // Erreur 500+
+  if (error.response?.status >= 500) {
+    return "🚧 Le serveur rencontre un problème. Réessayez bientôt."
+  }
+
+  return defaultMsg
+}
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -32,9 +61,10 @@ export const AuthProvider = ({ children }) => {
       setUser(data)
       return { success: true, data }
     } catch (error) {
+      console.error("Register error:", error)
       return {
         success: false,
-        message: error.response?.data?.message || "Erreur d'inscription",
+        message: getErrorMessage(error, "Erreur d'inscription"),
       }
     }
   }
@@ -48,9 +78,10 @@ export const AuthProvider = ({ children }) => {
       setUser(data)
       return { success: true, data }
     } catch (error) {
+      console.error("Login error:", error)
       return {
         success: false,
-        message: error.response?.data?.message || 'Erreur de connexion',
+        message: getErrorMessage(error, "Erreur de connexion"),
       }
     }
   }
