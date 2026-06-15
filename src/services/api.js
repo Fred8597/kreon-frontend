@@ -2,13 +2,13 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  timeout: 60000, // 60 secondes (important pour Render qui se réveille)
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
 // ===== INTERCEPTEUR REQUEST =====
-// Ajoute automatiquement le token JWT à chaque requête
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('kreon_token')
@@ -21,14 +21,12 @@ api.interceptors.request.use(
 )
 
 // ===== INTERCEPTEUR RESPONSE =====
-// Gère les erreurs 401 (token expiré → déconnexion forcée)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('kreon_token')
       localStorage.removeItem('kreon_user')
-      // Évite la boucle infinie sur /login
       if (window.location.pathname !== '/login') {
         window.location.href = '/login'
       }

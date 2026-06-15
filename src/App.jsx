@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -47,6 +48,22 @@ import Regles from "./pages/bonus/Regles"
 import Activite from "./pages/bonus/Activite"
 
 const App = () => {
+  // ===== PING ANTI-VEILLE RENDER (toutes les 14 min) =====
+  useEffect(() => {
+    const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api"
+    const pingURL = baseURL.replace("/api", "/")
+
+    const ping = () => {
+      fetch(pingURL).catch(() => {
+        // ignore erreurs
+      })
+    }
+
+    ping() // ping immédiat
+    const interval = setInterval(ping, 14 * 60 * 1000) // toutes les 14 min
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -72,7 +89,6 @@ const App = () => {
           </Route>
 
           {/* ===== SOUS-PAGES SANS BOTTOMNAV ===== */}
-          {/* Détails */}
           <Route path="/produit/:id" element={<ProtectedRoute><DetailProduit /></ProtectedRoute>} />
           <Route path="/actualite/:id" element={<ProtectedRoute><DetailActualite /></ProtectedRoute>} />
 

@@ -25,9 +25,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Validations
-    if (!nom || !email || !telephone || !password) {
-      toast.error("Veuillez remplir tous les champs obligatoires")
+    // Validations (TOUS les champs obligatoires, y compris code parrainage)
+    if (!nom || !email || !telephone || !password || !codeParrainage) {
+      toast.error("Tous les champs sont obligatoires, y compris le code de parrainage")
       return
     }
 
@@ -54,7 +54,7 @@ const Register = () => {
       email,
       telephone: telNettoye,
       password,
-      codeParrainage: codeParrainage || undefined,
+      codeParrainage: codeParrainage.trim().toUpperCase(),
     })
     setLoading(false)
 
@@ -79,6 +79,14 @@ const Register = () => {
         <div style={styles.card}>
           <h2 style={styles.title}>Inscription</h2>
           <p style={styles.subtitle}>Rejoins KREON et commence à investir 🚀</p>
+
+          {/* ===== INFO PARRAINAGE OBLIGATOIRE ===== */}
+          <div style={styles.infoBox}>
+            <Gift size={16} color="#10b981" />
+            <p style={styles.infoText}>
+              Un code de parrainage est obligatoire. Demandez-le à votre invitant.
+            </p>
+          </div>
 
           <form onSubmit={handleSubmit} style={styles.form}>
             {/* Nom complet */}
@@ -146,14 +154,9 @@ const Register = () => {
               />
             </div>
 
-            {/* Code parrainage (optionnel) */}
+            {/* Code parrainage OBLIGATOIRE */}
             <div style={styles.field}>
-              <label style={styles.label}>
-                Code de parrainage{" "}
-                <span style={{ color: "#6b7280", fontWeight: 400 }}>
-                  (optionnel)
-                </span>
-              </label>
+              <label style={styles.label}>Code de parrainage *</label>
               <Input
                 icon={Gift}
                 type="text"
@@ -243,7 +246,24 @@ const styles = {
   subtitle: {
     fontSize: "0.9rem",
     color: "#86efac",
-    marginBottom: "24px",
+    marginBottom: "16px",
+  },
+  // ===== INFO BOX PARRAINAGE =====
+  infoBox: {
+    display: "flex",
+    gap: "8px",
+    alignItems: "center",
+    padding: "10px 12px",
+    backgroundColor: "rgba(16,185,129,0.08)",
+    border: "1px solid rgba(16,185,129,0.3)",
+    borderRadius: "10px",
+    marginBottom: "20px",
+  },
+  infoText: {
+    fontSize: "0.78rem",
+    color: "#86efac",
+    lineHeight: 1.4,
+    flex: 1,
   },
   form: {
     display: "flex",
