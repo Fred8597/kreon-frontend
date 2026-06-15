@@ -49,29 +49,33 @@ const Register = () => {
     }
 
     setLoading(true)
-const result = await register({
-  nom,
-  email,
-  telephone: telNettoye,
-  password,
-  codeParrainage: codeParrainage.trim().toUpperCase(),
-})
-setLoading(false)
+    const result = await register({
+      nom,
+      email,
+      telephone: telNettoye,
+      password,
+      codeParrainage: codeParrainage.trim().toUpperCase(),
+    })
+    setLoading(false)
 
-if (result.success) {
-  toast.success(`Bienvenue ${result.data.nom} ! 🎉`)
-  navigate("/")
-} else {
-  // Message d'erreur plus parlant
-  let msg = result.message || "Erreur d'inscription"
-  
-  // Détecter timeout
-  if (msg.toLowerCase().includes("timeout") || msg.toLowerCase().includes("network")) {
-    msg = "⏳ Le serveur se réveille... Réessayez dans 30 secondes."
+    if (result.success) {
+      toast.success(`Bienvenue ${result.data.nom} ! 🎉`)
+      navigate("/")
+    } else {
+      // Message d'erreur plus parlant
+      let msg = result.message || "Erreur d'inscription"
+
+      // Détecter timeout
+      if (
+        msg.toLowerCase().includes("timeout") ||
+        msg.toLowerCase().includes("network")
+      ) {
+        msg = "⏳ Le serveur se réveille... Réessayez dans 30 secondes."
+      }
+
+      toast.error(msg, { duration: 5000 })
+    }
   }
-  
-  toast.error(msg, { duration: 5000 })
-}
 
   return (
     <div style={styles.page}>
@@ -255,7 +259,6 @@ const styles = {
     color: "#86efac",
     marginBottom: "16px",
   },
-  // ===== INFO BOX PARRAINAGE =====
   infoBox: {
     display: "flex",
     gap: "8px",
