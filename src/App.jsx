@@ -4,6 +4,9 @@ import { AuthProvider } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 import MainLayout from "./components/layout/MainLayout"
 
+// ===== PWA =====
+import PWAUpdate from "./components/ui/PWAUpdate"
+
 // Pages publiques
 import Login from "./pages/auth/Login"
 import Register from "./pages/auth/Register"
@@ -69,6 +72,9 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
+        {/* ===== TOAST MISE À JOUR PWA ===== */}
+        <PWAUpdate />
+
         <Routes>
           {/* ===== PUBLIQUES ===== */}
           <Route path="/login" element={<Login />} />
